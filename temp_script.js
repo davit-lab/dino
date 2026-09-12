@@ -7466,7 +7466,139 @@ function buildLevels(){
     bgHue:'blue'
   });
 
-  // LEVEL 14: Zombie Wedding Party
+  
+  // LEVEL 13: Ep.13 — China City (چینდის Città) 🏙️🗿
+  levels.push({
+    name:' epistem.13 — ჩინეთის ცის ქალაქი',
+    diffRating: 'საშუალო+', diffStars: '⭐⭐⭐', diffColor: '#38c6ff',
+    gimmickTitle: '🏙️ China City Traversal',
+    diffDesc: 'გაუნხლინეთ იყოს 中国 도시를 통과하는혹은 통과하지 못함!',
+    isCustomLayout: true,
+    theme: 'new_york_city',
+    width: 14000,
+    height: 1200,
+    spawn:{x:60, y:GROUND_Y-60},
+    checkpoints: [
+      { x: 2500, y: GROUND_Y, active: false },
+      { x: 6000, y: GROUND_Y, active: false },
+      { x: 10000, y: GROUND_Y - 400, active: false }
+    ],
+    // === SKYLINE & ROOFTOP SEQUENCE (0 to 2500) ===
+    plats: [
+      // 1. Spawn: Street level with yellow taxi
+      rect(0, GROUND_Y, 400, 90),
+      // 2. Moving yellow taxi (200 to 350)
+      rect(200, GROUND_Y - 30, 80, 24, {vx: 1.5, minX: 200, maxX: 350}),
+      // 3. Alley entrance with fire escape (350 to 700)
+      rect(380, GROUND_Y - 80, 120, 24),
+      rect(520, GROUND_Y - 160, 120, 24),
+      rect(660, GROUND_Y - 240, 80, 24),
+      // 4. Elevated highway onramp (700 to 1200)
+      rect(720, GROUND_Y - 30, 200, 24),
+      // 5. Construction zone with moving beam (1200 to 1800)
+      rect(1250, GROUND_Y - 80, 180, 24),
+      rect(1450, GROUND_Y - 160, 140, 24),
+      rect(1650, GROUND_Y - 240, 120, 24),
+      // 6. Rooftop garden with satellite dish (1800 to 2200)
+      rect(1820, GROUND_Y - 120, 200, 90),
+      // 7. Flag platform at 2500 (midpoint)
+      rect(2500, GROUND_Y - 120, 200, 90),
+      // 8. Neon billboard lane (2500 to 3200)
+      rect(2550, GROUND_Y - 30, 300, 24),
+      rect(2880, GROUND_Y - 60, 120, 24, {vx: 2.0, minX: 2860, maxX: 3100}),
+      // 9. Subway entrance / vent (3200 to 4000)
+      rect(3250, GROUND_Y - 100, 150, 40),
+      rect(3450, GROUND_Y - 180, 120, 24),
+      // 10. Skyscraper facade jumps (4000 to 5000)
+      rect(4100, GROUND_Y - 80, 220, 24),
+      rect(4380, GROUND_Y - 160, 200, 24),
+      rect(4660, GROUND_Y - 240, 180, 24),
+      // 11. Sky bridge corridor (5000 to 5500)
+      rect(5100, GROUND_Y - 200, 150, 24),
+      rect(5300, GROUND_Y - 280, 120, 24),
+      // 11b. Drone swarm waypoint cluster (5400 to 5800)
+      rect(5450, GROUND_Y - 150, 200, 90),
+      // 12. Central park overlook (5800 to 6000)
+      rect(5900, GROUND_Y - 50, 300, 90),
+      // 13. Rooftop to rooftop (6000 to 7000)
+      rect(6100, GROUND_Y - 100, 250, 90),
+      rect(6400, GROUND_Y - 200, 220, 24),
+      rect(6700, GROUND_Y - 300, 180, 24),
+      rect(7000, GROUND_Y - 400, 150, 24),
+      // 14. Helipad refuel (7000 to 7500)
+      rect(7100, GROUND_Y - 300, 180, 90),
+      rect(7400, GROUND_Y - 400, 180, 24),
+      // 15. Twin tower gap (7500 to 8200)
+      rect(7550, GROUND_Y - 200, 250, 24),
+      rect(7850, GROUND_Y - 350, 180, 24),
+      rect(8100, GROUND_Y - 450, 160, 24),
+      // 16. Empire State ascent (8200 to 9000)
+      rect(8300, GROUND_Y - 150, 220, 24),
+      rect(8600, GROUND_Y - 250, 200, 24),
+      rect(8950, GROUND_Y - 350, 180, 24),
+      // 17. Final approach to flag (9000 to 10000)
+      rect(9100, GROUND_Y - 100, 250, 90),
+      // 18. Drone factory corridor (10000 to 11000)
+      rect(10100, GROUND_Y - 100, 300, 90),
+      rect(10450, GROUND_Y - 200, 250, 24),
+      rect(10800, GROUND_Y - 300, 220, 24),
+      // 19. Maze of rotating laser drones (11000 to 12000)
+      rect(11100, GROUND_Y - 150, 280, 90),
+      rect(11450, GROUND_Y - 250, 230, 24),
+      rect(11800, GROUND_Y - 350, 200, 24),
+      // 20. Final boss drone platform (12000 to 13000)
+      rect(12100, GROUND_Y - 200, 280, 90),
+      rect(12450, GROUND_Y - 350, 250, 24),
+      rect(12800, GROUND_Y - 450, 180, 24),
+      // 21. Flag at sky rooftop (13000 to 14000)
+      rect(13100, GROUND_Y - 100, 300, 90),
+    ],
+    spinners: [
+      { cx: 5350, cy: GROUND_Y - 100, r: 40, angle: 0, speed: 0.08 },
+      { cx: 10500, cy: GROUND_Y - 200, r: 45, angle: 0, speed: -0.1 },
+      { cx: 12500, cy: GROUND_Y - 350, r: 50, angle: 0, speed: 0.12 }
+    ],
+    drones: [
+      { x: 300, y: GROUND_Y - 100, type: 'city_patrol', speed: 1.5, pattern: 'hover' },
+      { x: 900, y: GROUND_Y - 120, type: 'city_patrol', speed: 1.7, pattern: 'hover' },
+      { x: 1500, y: GROUND_Y - 140, type: 'city_patrol', speed: 1.6, pattern: 'hover' },
+      { x: 2200, y: GROUND_Y - 110, type: 'city_patrol', speed: 1.8, pattern: 'hover' },
+      { x: 2800, y: GROUND_Y - 130, type: 'city_patrol', speed: 1.5, pattern: 'hover' },
+      { x: 3500, y: GROUND_Y - 100, type: 'delivery', speed: 2.5, pattern: 'fast_forward' },
+      { x: 4200, y: GROUND_Y - 120, type: 'delivery', speed: 2.7, pattern: 'fast_forward' },
+      { x: 4900, y: GROUND_Y - 110, type: 'delivery', speed: 2.6, pattern: 'fast_forward' },
+      { x: 5600, y: GROUND_Y - 120, type: 'police', speed: 3.0, pattern: 'swoop' },
+      { x: 6300, y: GROUND_Y - 130, type: 'police', speed: 3.2, pattern: 'swoop' },
+      { x: 7000, y: GROUND_Y - 110, type: 'police', speed: 3.1, pattern: 'swoop' },
+      { x: 8000, y: GROUND_Y - 150, type: 'elite', speed: 3.5, pattern: 'complex' },
+      { x: 9500, y: GROUND_Y - 170, type: 'elite', speed: 3.7, pattern: 'complex' },
+      { x: 11000, y: GROUND_Y - 160, type: 'elite', speed: 3.6, pattern: 'complex' },
+      { x: 13500, y: GROUND_Y - 200, type: 'boss', speed: 4.0, pattern: 'guardian' }
+    ],
+    jumpboxes: [
+      rect(1200, GROUND_Y - 120, 40, 40, {hit:false, type:'shotgun'}),
+      rect(3500, GROUND_Y - 120, 40, 40, {hit:false, type:'plasma'}),
+      rect(7200, GROUND_Y - 300, 40, 40, {hit:false, type:'minigun'}),
+      rect(9500, GROUND_Y - 500, 40, 40, {hit:false, type:'rocket'}),
+      rect(11500, GROUND_Y - 600, 40, 40, {hit:false, type:'shield'})
+    ],
+    coins: [
+      ...Array.from({length: 20}, (_, i) => {
+        const x = 400 + i * 600;
+        const y = (i % 2 === 0) ? GROUND_Y - 120 : GROUND_Y - 300;
+        return rect(x, y, 22, 22);
+      })
+    ],
+    signs: [
+      { x: 100, y: 200, text: '🚕 ჰოვერბაიქს [W/A/S/D], ლაზერი [Space] undaverse maneuvers' },
+      { x: 2500, y: 200, text: '🏙️ China City skyline - avoid construction, taxis, and neon signage!' },
+      { x: 6000, y: 200, text: '🚧 Construction zone - moving beams ahead!' },
+      { x: 10000, y: 200, text: '🏢 Drone factory - incoming elite units!' }
+    ],
+    flag: rect(13800, GROUND_Y - 100, 30, 140, { isPortal: true })
+  });
+
+// LEVEL 14: Zombie Wedding Party
   levels.push({
     name:'ეპ.14 — საშიში ქორწილი',
     diffRating: 'ძალიან რთული', diffStars: '⭐⭐⭐⭐', diffColor: '#ef4444',
