@@ -5279,7 +5279,8 @@ function updateBullets(){
       }
     }
 
-    // Shooting barrels: bullets damage the barrel, it explodes at 0 HP
+    // Shooting barrels: ordinary barrels just break apart, only the rare explosive
+    // barrels (EXPLOSIVE) detonate when destroyed.
     if(!hit && level && level.boulders){
       for(let bi = level.boulders.length - 1; bi >= 0; bi--){
         const bd = level.boulders[bi];
@@ -5293,9 +5294,29 @@ function updateBullets(){
           spawnImpactFx(b.x, b.y, b.mode, { big: b.isRocket || b.isGrenade || b.isTankShell });
           sfxZombieHit();
           if(bd.hp <= 0){
-            bd.dead = true;
-            spawnBarrelExplosion(bd.x, bd.y);
             level.boulders.splice(bi, 1);
+            if(bd.explosive){
+              spawnBarrelExplosion(bd.x, bd.y, 105);
+              for(const z of zombies){
+                if(z.dead) continue;
+                const zcx = z.x + (z.w || 0)/2;
+                const zcy = z.y + (z.h || 0)/2;
+                if(Math.hypot(zcx - bd.x, zcy - bd.y) < 220){
+                  z.health = (z.health || 1) - 5;
+                  spawnZombieBlood(zcx, zcy + (z.h || 0)/2, { power: 1.3 });
+                  if(z.health <= 0){
+                    z.dead = true;
+                    state.zombiesKilledInLevel = (state.zombiesKilledInLevel || 0) + 1;
+                    addScore(300);
+                    addFloatingText(z.x, z.y - 20, "🔥 EXPLOSIVE KILL! +300", '#f97316');
+                  }
+                }
+              }
+            } else {
+              spawnParticles(bd.x, bd.y, '#9a6a2f', 16, 2.8);
+              spawnParticles(bd.x, bd.y, '#78350f', 12, 2.4);
+              addFloatingText(bd.x, bd.y - 30, "🪵 კასრი გატყდა!", '#d97706');
+            }
           }
           hit = true;
           break;
@@ -5729,8 +5750,8 @@ function bird(x, y, extra = {}){
     speed: extra.speed || 2.8,
     rangeX: extra.rangeX || 450,
     rangeY: extra.rangeY || 250,
-    hp: extra.hp || 3,
-    maxHp: extra.hp || 3,
+    hp: extra.hp || 1,
+    maxHp: extra.hp || 1,
     state: 'patrol',
     flapTimer: Math.random() * 10,
     type: extra.type || 'vulture', // 'vulture', 'fire_hawk', 'blood_eagle'
@@ -9388,23 +9409,67 @@ function updatePlayer(dt){
     }
   }
 
-  // Rolling Boulders & Barrels
-  for(const bd of (level.boulders || [])){
+  // Rolling Boulders & Barrels — real-time spawning from barrel spawners.
+  // Each spawner machine ejects a new barrel on a timer (no teleport-loop), and
+  // about 1 in 5 barrels is the rare EXPLOSIVE variant.
+  for(const sp of (level.barrelSpawners || [])){
+    if(sp.timer === undefined || sp.dir === undefined) initBarrelSpawners();
+    sp.timer = (sp.timer || 0) - dt;
+    if(sp.timer <= 0){
+      const live = (level.boulders || []).filter(
+        b => Math.abs((b.startX !== undefined ? b.startX : b.x) - sp.x) < 2
+      ).length;
+      if(live < (sp.maxConcurrent || 3)){
+        sp.timer += 2000 + Math.random() * 900;
+        const r = sp.r || 20;
+        const startX = sp.x;
+        const spx = startX + (sp.dir === 1 ? 1 : -1) * (r + 6);
+        level.boulders.push({
+          x: spx,
+          y: sp.y0 !== undefined ? sp.y0 : (sp.y !== undefined ? sp.y : GROUND_Y) - r,
+          r: r,
+          startX: startX,
+          minX: sp.rngMin !== undefined ? sp.rngMin : startX - 900,
+          maxX: sp.rngMax !== undefined ? sp.rngMax : startX + 900,
+          vx: sp.vx !== undefined ? sp.vx : (sp.dir === 1 ? 0.8 : -0.8),
+          angle: 0,
+          explosive: Math.random() < 0.2,
+          spawnT: state.time
+        });
+        spawnParticles(spx, (sp.y0 !== undefined ? sp.y0 : (sp.y !== undefined ? sp.y : GROUND_Y) - r), '#64748b', 8, 1.5);
+      } else {
+        sp.timer += 300;
+      }
+    }
+  }
+
+  // Move barrels — once a barrel rolls past its boundary it is removed for good
+  // (the machine keeps the stream alive in real action instead of looping).
+  for(let bi = (level.boulders || []).length - 1; bi >= 0; bi--){
+    const bd = level.boulders[bi];
     bd.x += bd.vx || -0.8;
     bd.angle = (bd.angle || 0) + (bd.vx || -0.8) * 0.05;
 
-    // Reset rolling barrels when reaching boundary to keep continuous stream of barrels
-    if(bd.vx > 0 && bd.startX !== undefined && bd.maxX !== undefined && bd.x > bd.maxX){
-      bd.x = bd.startX;
-    } else if((!bd.vx || bd.vx < 0) && bd.startX !== undefined && bd.minX !== undefined && bd.x < bd.minX){
-      bd.x = bd.startX;
+    const base = bd.startX !== undefined ? bd.startX : bd.x;
+    const gone = bd.vx > 0
+      ? bd.x > (bd.maxX !== undefined ? bd.maxX : base + 900)
+      : bd.x < (bd.minX !== undefined ? bd.minX : base - 900);
+    if(gone){
+      level.boulders.splice(bi, 1);
+      continue;
     }
 
     const bBox = { x: bd.x - bd.r, y: bd.y - bd.r, w: bd.r * 2, h: bd.r * 2 };
     if(overlap(player, bBox) && player.invuln <= 0){
-      hurtPlayer("💥 მოგორავე კასრის დარტყმა!");
-      player.vx = -6;
-      shake(14);
+      if(bd.explosive){
+        bd.dead = true;
+        level.boulders.splice(bi, 1);
+        spawnBarrelExplosion(bd.x, bd.y, 90);
+      } else {
+        hurtPlayer("💥 მოგორავე კასრის დარტყმა!");
+        player.vx = -6;
+        shake(14);
+      }
     }
   }
 
@@ -10107,6 +10172,15 @@ function loadLevel(idx){
   if(state.deathCam) state.deathCam.active = false;
   
   level = LEVELS[idx];
+
+  // Reset rolling barrels & set up their real-time machine spawners.
+  (level.boulders || []).forEach(b => {
+    if(b.initX === undefined) b.initX = b.x;
+    if(b.dead) b.x = b.startX !== undefined ? b.startX : b.initX;
+    b.dead = false;
+    if(b.explosive === undefined) b.explosive = Math.random() < 0.2;
+  });
+  initBarrelSpawners();
 
   // Each level starts with a full magazine and reserve for every weapon.
   refillAllWeapons();
@@ -13320,6 +13394,23 @@ function drawGravityRune(gr){
 }
 
 
+function initBarrelSpawners(){
+  const sps = level.barrelSpawners || [];
+  (sps).forEach(sp => {
+    const match = (level.boulders || []).find(
+      b => Math.abs((b.startX !== undefined ? b.startX : b.x) - sp.x) < 2
+    );
+    sp.r = match ? match.r : 20;
+    sp.dir = match ? (match.vx >= 0 ? 1 : -1) : -1;
+    sp.vx = match ? match.vx : (sp.dir === 1 ? 0.8 : -0.8);
+    sp.y0 = match ? match.y : ((sp.y !== undefined ? sp.y : GROUND_Y) - sp.r);
+    sp.rngMin = match ? match.minX : sp.x - 900;
+    sp.rngMax = match ? match.maxX : sp.x + 900;
+    sp.maxConcurrent = 3;
+    sp.timer = 500 + Math.random() * 1200;
+  });
+}
+
 function inferBarrelSpawners(boulders) {
   if(!boulders || !boulders.length) return [];
   const map = new Map();
@@ -13449,7 +13540,85 @@ function drawBoulder(bd){
   ctx.translate(sx, bd.y);
   ctx.rotate(bd.angle);
 
+  // Spring-out pop right after the machine ejects the barrel
+  if(bd.spawnT !== undefined){
+    const age = state.time - bd.spawnT;
+    if(age >= 0 && age < 160){
+      const k = 0.72 + 0.28 * Math.min(1, age / 160);
+      ctx.scale(k, k);
+    }
+  }
+
   const r = bd.r || 20;
+
+  // Explosive barrel variant: red steel drum with skull emblem & blinking fuse.
+  if(bd.explosive){
+    const face = ctx.createRadialGradient(0, -r * 0.15, r * 0.05, 0, 0, r);
+    face.addColorStop(0, '#f97316');
+    face.addColorStop(0.45, '#dc2626');
+    face.addColorStop(1, '#450a0a');
+    ctx.fillStyle = face;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#1c0a05';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Steel rim bands
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.86, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.72, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Skull & crossbones warning emblem
+    const sr = r * 0.34;
+    ctx.strokeStyle = '#f8fafc';
+    ctx.lineWidth = Math.max(1.5, r * 0.05);
+    ctx.beginPath();
+    ctx.moveTo(-sr * 0.9, -sr * 0.75); ctx.lineTo(sr * 0.9, sr * 0.75);
+    ctx.moveTo(-sr * 0.9, sr * 0.75); ctx.lineTo(sr * 0.9, -sr * 0.75);
+    ctx.stroke();
+    ctx.fillStyle = '#f8fafc';
+    ctx.beginPath();
+    ctx.arc(0, -sr * 0.12, sr * 0.58, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillRect(-sr * 0.62, -sr * 0.02, sr * 1.24, sr * 0.5);
+    ctx.fillStyle = '#111827';
+    ctx.beginPath();
+    ctx.arc(-sr * 0.24, -sr * 0.2, sr * 0.14, 0, Math.PI * 2);
+    ctx.arc(sr * 0.24, -sr * 0.2, sr * 0.14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillRect(-sr * 0.1, sr * 0.18, sr * 0.2, sr * 0.14);
+
+    // Blinking fuse spark on top
+    const flick = Math.sin(state.time * 0.02) * Math.sin(state.time * 0.013) > -0.25;
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -r * 0.9);
+    ctx.lineTo(0, -r * 1.25);
+    ctx.stroke();
+    if(flick){
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(0, -r * 1.3, r * 0.14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(253, 224, 71, 0.35)';
+      ctx.beginPath();
+      ctx.arc(0, -r * 1.3, r * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    return;
+  }
 
   // Wooden end-face with radial depth (bright centre, dark rim) like a
   // classic pixel-art barrel instead of a flat colour disc.
