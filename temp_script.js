@@ -648,7 +648,7 @@ const defaultSettings = {
   highJumpAssist: false   // false | true
 };
 
-const MAX_LEVELS = 11; // Raised to 11 so Epic 11 (Volcano's Heart) stays spliced in & playable
+const MAX_LEVELS = 14; // Raised to 14 so Epic 11 (Volcano's Heart) + Epic 12 + Epic 13 (China City finale) stay spliced in & playable
 
 // 🪙 dino coins (earned in levels) -> 💰 shop coins (spent in the shop)
 const COIN_EXCHANGE_RATE = 10;
