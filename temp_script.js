@@ -648,7 +648,7 @@ const defaultSettings = {
   highJumpAssist: false   // false | true
 };
 
-const MAX_LEVELS = 13; // Raised to 13 so Epics 11-12 stay playable + Level 13 (China Sky City) is the finale
+const MAX_LEVELS = 14; // Raised to 14 so the NEW YORK CITY (Level 14) is the finale
 
 // 🪙 dino coins (earned in levels) -> 💰 shop coins (spent in the shop)
 const COIN_EXCHANGE_RATE = 10;
@@ -7753,6 +7753,272 @@ shrineGates: [
     flag: rect(9300, GROUND_Y-440, 30, 140, {finishStyle:'paifang', lineFrom:9120, lineTo:9580})
   });
 
+  // LEVEL 14: NEW YORK CITY Edition 🗽
+  levels.push({
+    name:'ეპ.14 — ნიუ-იორკი: ცათამბჯენების კანიონი 🗽🚕',
+    diffRating: 'სასიკვდილო🔥', diffStars: '⭐⭐⭐⭐⭐', diffColor: '#dc2626',
+    gimmickTitle: '🗽 NEW YORK CITY FINALE — SKYLINE GAUNTLET', diffDesc: 'ნიუ-იორკის ქუჩებიდან ცათამბჯენების მწვერვალებამდე! ტაიმ-სქვერის მოძრავი ავტობუსი, ამწეების ფრენები, ნეონ-კანიონი, კინგ-კონგის ფინალური არენა და ზომბების ამოწევა — ემპაირ-სთეითის მწვერვალზე ვერტმფრენი გელოდება!',
+    zombieSpeedMult: 1.7, zombieHpMult: 1.7, gravityMult: 1.0, hazardType: 'new_york_city',
+    theme: 'new_york_city',
+    keepDesign: true, masterDesign: true,
+    width: 17900, height: 2300,
+    checkpointRespawn: true,
+    spawn:{x:70, y:GROUND_Y-60},
+
+    // ===== PHASE A: ბრუკლინის ქუჩა (0-2030) =====
+    plats: [
+      rect(0, GROUND_Y, 820, 90),                            // Spawn sidewalk
+      rect(840, GROUND_Y, 300, 90),                          // Crosswalk block
+      rect(1200, GROUND_Y, 200, 90),                         // Curb block
+      rect(1420, GROUND_Y, 260, 90),                         // Run-up sidewalk
+      rect(1680, GROUND_Y - 60, 70, 24),                     // Fire-escape stair 1
+      rect(1750, GROUND_Y - 120, 70, 24),                    // Fire-escape stair 2
+      rect(1820, GROUND_Y - 180, 70, 24),                    // Fire-escape stair 3
+      rect(1890, GROUND_Y - 240, 130, 24),                   // Fire-escape stair 4 (roof level)
+      rect(2020, GROUND_Y - 240, 510, 60),                   // ROOFTOP 1
+      // ===== PHASE B: ტაიმ-სქვერი (2560-6760) =====
+      rect(2530, GROUND_Y - 300, 340, 24),                   // Billboard step (wide catch)
+      rect(2810, GROUND_Y - 300, 220, 24, {vx: 2.6, minX: 2810, maxX: 4300, dwell: 130}), // Aerial bus
+      rect(4360, GROUND_Y - 300, 260, 24),                   // Avenue receive
+      rect(4660, GROUND_Y - 370, 150, 24),                   // Stair 1
+      rect(4860, GROUND_Y - 440, 150, 24),                   // Stair 2
+      rect(5060, GROUND_Y - 440, 260, 24, {isTreadmill: true, beltSpeed: 3.1}), // Conveyor roof
+      rect(5360, GROUND_Y - 440, 160, 24),                   // Conveyor exit
+      rect(5560, GROUND_Y - 440, 180, 24, {vx: 2.5, minX: 5500, maxX: 6380, dwell: 130}), // Ferry shuttle
+      rect(6440, GROUND_Y - 440, 320, 70),                   // ROOFTOP 2
+      // ===== PHASE C: მიდთაუნის ასვლა (6780-10260) =====
+      rect(6780, GROUND_Y - 560, 140, 24),
+      rect(6960, GROUND_Y - 640, 140, 24),
+      rect(7130, GROUND_Y - 720, 140, 24),
+      rect(7300, GROUND_Y - 800, 130, 24),                   // Trampoline pad
+      rect(7600, GROUND_Y - 1100, 300, 24),                  // Crusher-gate ledge
+      rect(7960, GROUND_Y - 1100, 140, 24),
+      rect(8180, GROUND_Y - 1160, 140, 24),
+      rect(8360, GROUND_Y - 1220, 140, 24),                  // Booster pad
+      rect(8520, GROUND_Y - 1380, 150, 24),                  // Boosted ledge (catch)
+      rect(8760, GROUND_Y - 1420, 1100, 24),                 // Roof bridge to Tower 3
+      rect(9860, GROUND_Y - 1420, 400, 70),                  // ROOFTOP 3
+      // ===== PHASE D: ნეონ-კანიონი (10340-12900) =====
+      rect(10340, GROUND_Y - 1400, 150, 24),
+      rect(10550, GROUND_Y - 1450, 70, 20),                  // Crumbling bridge A
+      rect(10650, GROUND_Y - 1470, 70, 20),                  // Crumbling bridge B
+      rect(10760, GROUND_Y - 1470, 160, 24),
+      rect(10980, GROUND_Y - 1490, 130, 24),
+      rect(11140, GROUND_Y - 1470, 160, 24),
+      rect(11340, GROUND_Y - 1470, 160, 24),
+      rect(11530, GROUND_Y - 1550, 150, 24),
+      rect(11710, GROUND_Y - 1550, 160, 24),
+      rect(11890, GROUND_Y - 1550, 300, 24),
+      rect(12240, GROUND_Y - 1600, 130, 24),                 // Canyon trampoline pad
+      rect(12440, GROUND_Y - 1620, 460, 70),                 // ROOFTOP 4
+      // ===== PHASE E: ემპაირ-რაიზი + ბოს არენა + ზომბების ჩეისი =====
+      rect(13000, GROUND_Y - 1600, 150, 24),
+      rect(13200, GROUND_Y - 1520, 150, 24),
+      rect(13400, GROUND_Y - 1440, 150, 24),
+      rect(13620, GROUND_Y - 1280, 260, 24),
+      rect(13960, GROUND_Y - 1000, 260, 24),
+      rect(14280, GROUND_Y - 760, 300, 24),
+      rect(14700, GROUND_Y - 320, 1500, 90),                 // EMPIRE ARENA
+      rect(16320, GROUND_Y - 400, 200, 60),                  // Chase stone 1
+      rect(16580, GROUND_Y - 480, 120, 60),                  // Chase stone 2
+      rect(16740, GROUND_Y - 540, 120, 60),                  // Chase stone 3
+      rect(16880, GROUND_Y - 580, 700, 80)                   // FINAL PLATEAU
+    ],
+    crumblingPlats: [
+      rect(10550, GROUND_Y - 1450, 70, 20),
+      rect(10650, GROUND_Y - 1470, 70, 20)
+    ],
+    trampolines: [
+      rect(7300, GROUND_Y - 815, 130, 18, {bouncePower: 2.4}),  // Sky-launch to the gate
+      rect(8380, GROUND_Y - 1235, 70, 18, {bouncePower: 2.0}),  // Tower-climb hop to the roof bridge
+      rect(12270, GROUND_Y - 1615, 55, 18, {bouncePower: 2.5}) // Canyon hop to Rooftop 4
+    ],
+    boosters: [],
+    popspikes: [
+      rect(1240, GROUND_Y - 24, 90, 24, {period: 500, offset: 0}),
+      rect(2100, GROUND_Y - 264, 60, 24, {period: 520, offset: 80}),
+      rect(6600, GROUND_Y - 464, 60, 24, {period: 520, offset: 80}),
+      rect(7700, GROUND_Y - 1124, 60, 24, {period: 480, offset: 0}),
+      rect(11750, GROUND_Y - 1574, 60, 24, {period: 520, offset: 60}),
+      rect(14000, GROUND_Y - 1024, 90, 24, {period: 600, offset: 0}),
+      rect(15200, GROUND_Y - 344, 90, 24, {period: 600, offset: 0}),
+      rect(15950, GROUND_Y - 344, 90, 24, {period: 600, offset: 300})
+    ],
+    crushers: [
+      { x: 520, topY: 20, w: 64, h: 80, dropSpeed: 6, maxDrop: 485, riseSpeed: 3.2 }
+    ],
+    lasers: [
+      { x: 4920, y: GROUND_Y - 455, w: 120, h: 14, timer: 0, activeTime: 240, offTime: 130, active: false },
+      { x: 5140, y: GROUND_Y - 455, w: 130, h: 14, timer: 0, activeTime: 240, offTime: 130, active: false },
+      { x: 11420, y: GROUND_Y - 1505, w: 130, h: 14, timer: 0, activeTime: 220, offTime: 150, active: false }
+    ],
+    acidGeysers: [
+      { x: 830, y: GROUND_Y, w: 30, h: 180, timer: 0, activeTime: 140, offTime: 220, active: false }
+    ],
+    firejets: [
+      { x: 11890, y: GROUND_Y - 1000, w: 24, h: 150, timer: 0, activeTime: 90, offTime: 160, active: false }
+    ],
+    electroOrbs: [
+      { x: 4780, y: GROUND_Y - 400, w: 26, h: 26 },
+      { x: 12290, y: GROUND_Y - 1630, w: 28, h: 28 }
+    ],
+    swingingAxes: [
+      { cx: 4960, cy: GROUND_Y - 580, len: 230, angle: 0, speed: 0.0035, range: 1.5, offset: 0 },
+      { cx: 7200, cy: GROUND_Y - 900, len: 240, angle: 0, speed: 0.0035, range: 1.5, offset: 2.2 },
+      { cx: 11640, cy: GROUND_Y - 1700, len: 250, angle: 0, speed: 0.0035, range: 1.6, offset: 0 }
+    ],
+    spinners: [
+      { cx: 11220, cy: GROUND_Y - 1600, r: 46, angle: 0, speed: 0.045 },
+      { cx: 6960, cy: GROUND_Y - 640, r: 44, angle: 0, speed: 0.05 }
+    ],
+    winds: [
+      rect(10600, -200, 900, 480, {dir: -1, speed: 2.2}),   // Neon-canyon headwind
+      rect(7000, -300, 500, 260, {dir: -1, speed: 1.6})     // Tower climb wind
+    ],
+    boulders: [
+      { x: 12120, startX: 12120, minX: 10900, y: GROUND_Y - 945, r: 22, vx: -3.2, angle: 0 }
+    ],
+    barrelSpawners: [
+      { x: 12040, y: GROUND_Y - 945 }
+    ],
+    birds: [
+      { x: 810, y: GROUND_Y - 260, w: 40, h: 30, vx: 2.2, vy: 0, speed: 2.2, rangeX: 220, startX: 810, startY: GROUND_Y - 260, type: 'mutant_crow', state: 'patrol', flapTimer: 0, startSwoop: 999999 },
+      { x: 5200, y: GROUND_Y - 560, w: 42, h: 30, vx: 2.4, vy: 0, speed: 2.4, rangeX: 400, startX: 5200, startY: GROUND_Y - 560, type: 'fire_hawk', state: 'patrol', flapTimer: 0, startSwoop: 25000 },
+      { x: 10650, y: GROUND_Y - 1600, w: 40, h: 30, vx: 2.6, vy: 0, speed: 2.6, rangeX: 500, startX: 10650, startY: GROUND_Y - 1600, type: 'mutant_crow', state: 'patrol', flapTimer: 0, startSwoop: 20000 }
+    ],
+    zombies: [
+      { x: 900, y: GROUND_Y - 54 },
+      { x: 4400, y: GROUND_Y - 354 },
+      { x: 5150, y: GROUND_Y - 494 },
+      { x: 8420, y: GROUND_Y - 689 },
+      { x: 12050, y: GROUND_Y - 1019 },
+      { x: 15050, y: GROUND_Y - 319 },
+      { x: 17150, y: GROUND_Y - 59 }
+    ],
+
+    // ===== REWARDS & COLLECTIBLES =====
+    coins: [
+      rect(120, GROUND_Y - 40, 22, 22), rect(340, GROUND_Y - 40, 22, 22), rect(560, GROUND_Y - 40, 22, 22),
+      rect(960, GROUND_Y - 40, 22, 22), rect(1280, GROUND_Y - 60, 22, 22), rect(1450, GROUND_Y - 60, 22, 22),
+      rect(1670, GROUND_Y - 490, 22, 22), rect(1740, GROUND_Y - 430, 22, 22),
+      rect(1810, GROUND_Y - 370, 22, 22), rect(1880, GROUND_Y - 305, 22, 22),
+      rect(2120, GROUND_Y - 270, 22, 22), rect(2300, GROUND_Y - 270, 22, 22), rect(2400, GROUND_Y - 300, 22, 22),
+      rect(2640, GROUND_Y - 330, 22, 22),
+      rect(4460, GROUND_Y - 330, 22, 22),
+      rect(4680, GROUND_Y - 400, 22, 22),
+      rect(4900, GROUND_Y - 470, 22, 22), rect(4960, GROUND_Y - 490, 22, 22),
+      rect(5120, GROUND_Y - 480, 22, 22), rect(5200, GROUND_Y - 500, 22, 22), rect(5400, GROUND_Y - 470, 22, 22),
+      rect(6500, GROUND_Y - 470, 22, 22), rect(6720, GROUND_Y - 470, 22, 22),
+      rect(6800, GROUND_Y - 590, 22, 22),
+      rect(7000, GROUND_Y - 670, 22, 22),
+      rect(7180, GROUND_Y - 750, 22, 22),
+      rect(7340, GROUND_Y - 830, 22, 22),
+      rect(7700, GROUND_Y - 1130, 22, 22), rect(7830, GROUND_Y - 1130, 22, 22),
+      rect(8000, GROUND_Y - 1130, 22, 22),
+      rect(8230, GROUND_Y - 1190, 22, 22),
+      rect(8420, GROUND_Y - 1250, 22, 22),
+      rect(8560, GROUND_Y - 1410, 22, 22),
+      rect(8800, GROUND_Y - 1450, 22, 22),
+      rect(9950, GROUND_Y - 1450, 22, 22), rect(10070, GROUND_Y - 1450, 22, 22),
+      rect(10400, GROUND_Y - 1430, 22, 22),
+      rect(10600, GROUND_Y - 1480, 22, 22), rect(10695, GROUND_Y - 1500, 22, 22),
+      rect(10820, GROUND_Y - 1500, 22, 22),
+      rect(11030, GROUND_Y - 1520, 22, 22),
+      rect(11200, GROUND_Y - 1500, 22, 22), rect(11400, GROUND_Y - 1500, 22, 22),
+      rect(11600, GROUND_Y - 1580, 22, 22),
+      rect(11750, GROUND_Y - 1590, 22, 22), rect(11820, GROUND_Y - 1610, 22, 22),
+      rect(12060, GROUND_Y - 1580, 22, 22),
+      rect(12280, GROUND_Y - 1630, 22, 22),
+      rect(12620, GROUND_Y - 1650, 22, 22), rect(12800, GROUND_Y - 1650, 22, 22),
+      rect(13040, GROUND_Y - 1630, 22, 22),
+      rect(13240, GROUND_Y - 1550, 22, 22),
+      rect(13440, GROUND_Y - 1470, 22, 22),
+      rect(13700, GROUND_Y - 1310, 22, 22),
+      rect(14020, GROUND_Y - 1030, 22, 22), rect(14140, GROUND_Y - 1030, 22, 22),
+      rect(14400, GROUND_Y - 790, 22, 22),
+      rect(15050, GROUND_Y - 380, 22, 22), rect(15300, GROUND_Y - 350, 22, 22), rect(15500, GROUND_Y - 350, 22, 22),
+      rect(15700, GROUND_Y - 350, 22, 22), rect(16000, GROUND_Y - 380, 22, 22),
+      rect(16450, GROUND_Y - 430, 22, 22),
+      rect(16620, GROUND_Y - 510, 22, 22),
+      rect(16780, GROUND_Y - 570, 22, 22),
+      rect(17150, GROUND_Y - 620, 22, 22), rect(17300, GROUND_Y - 610, 22, 22), rect(17500, GROUND_Y - 610, 22, 22)
+    ],
+    bells: [
+      rect(4520, GROUND_Y - 330, 26, 30),
+      rect(5320, GROUND_Y - 500, 26, 30),
+      rect(10200, GROUND_Y - 1480, 26, 30),
+      rect(11450, GROUND_Y - 1530, 26, 30),
+      rect(15900, GROUND_Y - 360, 26, 30),
+      rect(17600, GROUND_Y - 630, 26, 30)
+    ],
+    goldTrophies: [
+      rect(12880, GROUND_Y - 1665, 36, 40),
+      rect(17140, GROUND_Y - 620, 36, 40)
+    ],
+    energyCrystals: [
+      rect(8320, GROUND_Y - 1240, 24, 28),
+      rect(11950, GROUND_Y - 1580, 24, 28),
+      rect(15700, GROUND_Y - 360, 24, 28)
+    ],
+    wings: [
+      rect(11260, GROUND_Y - 1550, 36, 36),
+      rect(15800, GROUND_Y - 400, 36, 36)
+    ],
+    coinBags: [
+      rect(1400, GROUND_Y - 40, 42, 42, {taken: false}),
+      rect(7060, GROUND_Y - 690, 42, 42, {taken: false}),
+      rect(14500, GROUND_Y - 790, 42, 42, {taken: false})
+    ],
+    traps: [
+      rect(520, GROUND_Y - 95, 26, 26, {taken: false, type: 'poison_skull'}),
+      rect(4460, GROUND_Y - 340, 26, 26, {taken: false, type: 'poison_skull'}),
+      rect(10400, GROUND_Y - 1450, 26, 26, {taken: false, type: 'poison_skull'}),
+      rect(14020, GROUND_Y - 1040, 26, 26, {taken: false, type: 'poison_skull'})
+    ],
+    jumpboxes: [
+      rect(430, GROUND_Y - 110, 42, 42, {hit: false, type: 'shotgun'}),
+      rect(2250, GROUND_Y - 300, 42, 42, {hit: false, type: 'heart'}),
+      rect(2640, GROUND_Y - 355, 42, 42, {hit: false, type: 'shield'}),
+      rect(4900, GROUND_Y - 495, 42, 42, {hit: false, type: 'minigun'}),
+      rect(6600, GROUND_Y - 495, 42, 42, {hit: false, type: 'plasma'}),
+      rect(7180, GROUND_Y - 775, 42, 42, {hit: false, type: 'lucky_mystery'}),
+      rect(9950, GROUND_Y - 1490, 42, 42, {hit: false, type: 'rocket'}),
+      rect(11750, GROUND_Y - 1615, 42, 42, {hit: false, type: 'fastener'}),
+      rect(15150, GROUND_Y - 375, 42, 42, {hit: false, type: 'shield'}),
+      rect(16300, GROUND_Y - 455, 42, 42, {hit: false, type: 'weapon'})
+    ],
+    bushes: [],
+    signs: [
+      { x: 180, y: GROUND_Y - 120, text: '🗽 ბრუკლინი! გადახტი ქუჩის ორმოებს და ზემოთ აივანზე! ფაირ-ესქეიფი გელის!' },
+      { x: 2660, y: GROUND_Y - 340, text: '🕰️ ტაიმ-სქვერი! მოძრავი ავტობუსით გადაკვეთე გამზირი, მერე ტრედმილი + შატლი!' },
+      { x: 6840, y: GROUND_Y - 595, text: '🏙️ მიდთაუნის კოშკები! ბატუტი + ბუსტერი + ამწის ხიდი = ცა!' },
+      { x: 10500, y: GROUND_Y - 1460, text: '🌆 ნეონ-კანიონი! მტვრევადი ხიდები, ქარი და ლულები მოგდევენ!' },
+      { x: 14980, y: GROUND_Y - 360, text: '👑 ემპაირ-სთეითი! კინგ-კონგი + ზომბების მოზღვავება! ⏳ იჩქარე!' },
+      { x: 17180, y: GROUND_Y - 620, text: '🚁 ვერტმფრენი გელოდება მწვერვალზე! ფინიშში! 🏁' }
+    ],
+    checkpoints: [
+      { x: 2140, y: GROUND_Y - 294, active: false },
+      { x: 6550, y: GROUND_Y - 494, active: false },
+      { x: 10100, y: GROUND_Y - 1474, active: false },
+      { x: 12850, y: GROUND_Y - 1674, active: false }
+    ],
+
+    // ===== PHASE F: Rising horde chase + King Kong =====
+    risingHordeSpeed: 1.3,
+    hordeClearX: 15200,
+    hordeCapY: 240,
+    bossSpawnX: 15000,
+    bossFloorY: 240,
+    bossSkin: {
+      name: 'კინგ-კონგი',
+      nameGeo: 'KING KONG — NEW YORK CITY',
+      color: '#b45309',
+      auraColor: '#f59e0b'
+    },
+
+    flag: rect(17300, GROUND_Y - 720, 30, 140, {finishStyle:'grand', lineFrom:17100, lineTo:17700})
+  });
+
   // LEVEL 12: CodeZero Cyber-Matrix
   levels.push({
     name:'ეპ.12 — კიბერ ლაბორატორია',
@@ -10738,7 +11004,7 @@ function loadLevel(idx){
       b.dead = false;
       b.hp = b.maxHp || 3;
       b.state = 'patrol';
-      b.swoopCooldown = 0;
+      b.swoopCooldown = b.startSwoop || 0;
       b.vx = -Math.abs(b.speed || 2.8);
     });
   }
